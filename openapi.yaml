@@ -1,0 +1,204 @@
+openapi: 3.0.1
+info:
+  title: Network Configuration App
+  version: 0.0.1
+
+servers:
+  - url: http://localhost:8080/api/v1/
+    description: Server
+    
+paths:
+  /devices:
+    get:
+      summary: Method for getting list of all Devices
+      tags:
+        - Devices
+      operationId: getAllDevices
+      responses:
+        '200':
+          description: Success, list of all Devices.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceDTO'
+        'default':
+          description: Error - occured.
+          content:
+             application/json:
+              schema:
+                  $ref: '#/components/schemas/ErrorDTO'
+    
+    
+    
+    post:
+      summary: Method for create new Device
+      operationId: createDevice
+      tags:
+        - Devices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceDTO'
+              
+      responses:
+        '200':
+          description: Success - required device.
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/DeviceDTO'
+        'default':
+          description: Error - occured.
+          content:
+             application/json:
+              schema:
+                  $ref: '#/components/schemas/ErrorDTO'        
+              
+              
+  /devices/{device_id}:
+    get:
+      summary: Method for getting device, by given device-ID
+      tags:
+        - Devices
+      operationId: getDeviceById
+      parameters: 
+        - name: device_id
+          in: path
+          required: true
+          description: Device ID
+          schema:
+            type: integer
+            format: int32
+          example: 0
+          
+      responses:
+        '200':
+          description: Success - required device.
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/DeviceDTO'
+        'default':
+          description: Error - occured.
+          content:
+             application/json:
+              schema:
+                  $ref: '#/components/schemas/ErrorDTO'
+  
+    delete:
+      summary: Method for deleting device, by given device-ID
+      tags:
+        - Devices
+      operationId: deleteById
+      parameters: 
+        - name: device_id
+          in: path
+          required: true
+          description: Device ID
+          schema:
+            type: integer
+            format: int32
+          example: 0
+      responses:
+        '200':
+          description: Success - device removed.
+          content:
+            application/json: {}
+        'default':
+          description: Error - occured.
+          content:
+             application/json:
+              schema:
+                  $ref: '#/components/schemas/ErrorDTO'
+    
+    put:
+      summary: Method for editing, existing device.
+      tags:
+        - Devices
+      operationId: patchDevice
+      parameters:
+        - name: device_id
+          in: path
+          required: true
+          description: ID устройства
+          schema:
+            type: integer
+            format: int32
+          example: 0
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceDTO'
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  example: 1
+                name:
+                  type: string
+                  example: "new_name"
+                type:
+                  type: string
+                  example: "router"
+                ip_address:
+                  type: string
+                  example: "10.0.0.1"
+                location:
+                  type: string
+                  example: "server-room"
+                  
+      responses:
+        '200':
+          description: Success — device is updated.
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/DeviceDTO'
+        'default':
+          description: Ошибка.
+          content:
+             application/json:
+              schema:
+                  $ref: '#/components/schemas/ErrorDTO'
+    
+components:
+  schemas:
+  
+    DeviceDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: "1"
+        name:
+          type: string
+          example: "Office PC"
+        type:
+          type: string
+          example: "PC"
+        ip_address:
+          type: string
+          example: "192.168.0.1"
+        location:
+          type: string
+          example: "Main Office"
+          
+    ErrorDTO:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: "Error"

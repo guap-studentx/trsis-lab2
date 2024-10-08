@@ -1,0 +1,254 @@
+openapi: 3.0.1
+info:
+  title: Network Configuration App
+  version: 0.0.1
+servers:
+- description: Server
+  url: http://localhost:8080/api/v1/
+paths:
+  /devices:
+    get:
+      operationId: getAllDevices
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DeviceDTOFull'
+                type: array
+          description: List of devices.
+        "500":
+          content:
+            application/json:
+              schema:
+                example: Internal Server Error
+                type: string
+          description: Server error.
+      summary: Method for getting list of all Devices
+      tags:
+      - Devices
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Devices
+    post:
+      operationId: createDevice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceDTOFull'
+          description: Device created.
+        "400":
+          content:
+            application/json:
+              schema:
+                example: Bad Request - Validation Error
+                type: string
+          description: Validation Error.
+        "500":
+          content:
+            application/json:
+              schema:
+                example: Internal Server Error
+                type: string
+          description: Server Error.
+      summary: Method for create new Device
+      tags:
+      - Devices
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Devices
+  /devices/{device_id}:
+    delete:
+      operationId: deleteById
+      parameters:
+      - description: Device ID
+        example: 1
+        explode: false
+        in: path
+        name: device_id
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json: {}
+          description: Success - Device deleted.
+        "404":
+          content:
+            application/json:
+              schema:
+                example: Device not found
+                type: string
+          description: Device not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                example: Internal Server Error
+                type: string
+          description: Server Error.
+      summary: Method for deleting device by given device-ID
+      tags:
+      - Devices
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Devices
+    get:
+      operationId: getDeviceById
+      parameters:
+      - description: Device ID
+        example: 1
+        explode: false
+        in: path
+        name: device_id
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceDTOFull'
+          description: success.
+        "404":
+          content:
+            application/json:
+              schema:
+                example: Device not found
+                type: string
+          description: Device not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                example: Internal Server Error
+                type: string
+          description: Server error.
+      summary: Method for getting device by given device-ID
+      tags:
+      - Devices
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Devices
+    put:
+      operationId: patchDevice
+      parameters:
+      - description: Device ID
+        example: 1
+        explode: false
+        in: path
+        name: device_id
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceDTOFull'
+          description: Device succesfully updated.
+        "400":
+          content:
+            application/json:
+              schema:
+                example: Bad Request - Missing or invalid data
+                type: string
+          description: Missing or Invalid data.
+        "404":
+          content:
+            application/json:
+              schema:
+                example: Device not found
+                type: string
+          description: device not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                example: Internal Server Error
+                type: string
+          description: Server error.
+      summary: Method for updating device by given device-ID
+      tags:
+      - Devices
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Devices
+components:
+  schemas:
+    DeviceDTOFull:
+      example:
+        name: Office PC
+        location: Main Office
+        id: 1
+        ip_address: 192.168.0.1
+        type: PC
+      properties:
+        id:
+          example: 1
+          format: int32
+          type: integer
+        name:
+          example: Office PC
+          type: string
+        type:
+          example: PC
+          type: string
+        ip_address:
+          example: 192.168.0.1
+          type: string
+        location:
+          example: Main Office
+          type: string
+      type: object
+    DeviceDTO:
+      example:
+        name: Office PC
+        location: Main Office
+        ip_address: 192.168.0.1
+        type: PC
+      properties:
+        name:
+          example: Office PC
+          type: string
+        type:
+          example: PC
+          type: string
+        ip_address:
+          example: 192.168.0.1
+          type: string
+        location:
+          example: Main Office
+          type: string
+      type: object
